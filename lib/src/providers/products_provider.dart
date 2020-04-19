@@ -4,14 +4,16 @@ import 'package:http/http.dart' as http;
 import 'package:mime_type/mime_type.dart';
 import 'package:http_parser/http_parser.dart';
 
+import 'package:crud_flutter/src/shared_preferences/user_preferences.dart';
 import 'package:crud_flutter/src/models/product_model.dart';
 export 'package:crud_flutter/src/models/product_model.dart';
 
 class ProducstProvider {
   final String _url = 'https://flutter-varios-cd3e1.firebaseio.com';
+  final _prefs = new UserPreferences();
 
   Future<bool> createProduct(Product product) async {
-    final url = '$_url/products.json';
+    final url = '$_url/products.json?auth=${_prefs.token}';
 
     final res = await http.post(url, body: productModelToJson(product));
     final decodedData = json.decode(res.body);
@@ -22,7 +24,7 @@ class ProducstProvider {
   }
 
   Future<bool> updateProduct(Product product) async {
-    final url = '$_url/products/${product.id}.json';
+    final url = '$_url/products/${product.id}.json?auth=${_prefs.token}';
 
     final res = await http.put(url, body: productModelToJson(product));
     final decodedData = json.decode(res.body);
@@ -33,7 +35,7 @@ class ProducstProvider {
   }
 
   Future<List<Product>> getAll() async {
-    final url = '$_url/products.json';
+    final url = '$_url/products.json?auth=${_prefs.token}';
 
     final res = await http.get(url);
     final Map<String, dynamic> decodedData = json.decode(res.body);
@@ -52,7 +54,7 @@ class ProducstProvider {
   }
 
   Future<bool> deleteProduct(String id) async {
-    final url = '$_url/products/$id.json';
+    final url = '$_url/products/$id.json?auth=${_prefs.token}';
     final res = await http.delete(url);
 
     return true;

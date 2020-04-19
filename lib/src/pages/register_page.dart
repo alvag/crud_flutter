@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/pages/home_page.dart';
-import 'package:crud_flutter/src/pages/register_page.dart';
-import 'package:crud_flutter/src/providers/user_provider.dart';
+import 'package:crud_flutter/src/pages/login_page.dart';
 import 'package:crud_flutter/src/blocs/provider.dart';
+import 'package:crud_flutter/src/providers/user_provider.dart';
 import 'package:crud_flutter/src/utils/utils.dart' as utils;
 
-class LoginPage extends StatelessWidget {
-  static final routeName = 'login';
+class RegisterPage extends StatelessWidget {
+  static final routeName = 'register';
   final userProvider = new UserProvider();
 
   @override
@@ -105,20 +105,20 @@ class LoginPage extends StatelessWidget {
             ),
             child: Column(
               children: <Widget>[
-                Text('Ingreso', style: TextStyle(fontSize: 20.0)),
+                Text('Crear cuenta', style: TextStyle(fontSize: 20.0)),
                 SizedBox(height: 40.0),
                 _inputEmail(bloc),
                 SizedBox(height: 30.0),
                 _inputPassword(bloc),
                 SizedBox(height: 30.0),
-                _loginButton(bloc, context),
+                _registerButton(bloc, context),
               ],
             ),
           ),
           FlatButton(
-            child: Text('Crear cuenta'),
+            child: Text('Ir al login'),
             onPressed: () =>
-                Navigator.pushReplacementNamed(context, RegisterPage.routeName),
+                Navigator.pushReplacementNamed(context, LoginPage.routeName),
           ),
           SizedBox(height: 20.0),
         ],
@@ -167,7 +167,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginButton(LoginBloc bloc, BuildContext context) {
+  Widget _registerButton(LoginBloc bloc, BuildContext context) {
     return StreamBuilder(
       stream: bloc.formValidStream,
       initialData: null,
@@ -175,7 +175,7 @@ class LoginPage extends StatelessWidget {
         return RaisedButton(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-            child: Text('Ingresar'),
+            child: Text('Registrar'),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
@@ -183,18 +183,18 @@ class LoginPage extends StatelessWidget {
           // elevation: 0.0,
           color: Colors.deepPurple,
           textColor: Colors.white,
-          onPressed: snapshot.hasData ? () => _login(bloc, context) : null,
+          onPressed: snapshot.hasData ? () => _register(bloc, context) : null,
         );
       },
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) async {
-    final res = await userProvider.login(bloc.email, bloc.password);
+  _register(LoginBloc bloc, BuildContext context) async {
+    final res = await userProvider.createUser(bloc.email, bloc.password);
     if (res['ok']) {
       Navigator.pushReplacementNamed(context, HomePage.routeName);
     } else {
-      utils.showAlert(context, 'Usuario o contraseña incorrecto');
+      utils.showAlert(context, res['message']);
     }
   }
 }
