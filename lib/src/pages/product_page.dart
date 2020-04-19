@@ -16,6 +16,12 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    final Product productData = ModalRoute.of(context).settings.arguments;
+
+    if (productData != null) {
+      product = productData;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Producto'),
@@ -106,7 +112,11 @@ class _ProductPageState extends State<ProductPage> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
 
-      productProvider.createProduct(product);
+      if (product.id == null) {
+        productProvider.createProduct(product);
+      } else {
+        productProvider.updateProduct(product);
+      }
     }
   }
 }
