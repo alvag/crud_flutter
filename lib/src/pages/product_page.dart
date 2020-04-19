@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/utils/utils.dart' as utils;
-import 'package:crud_flutter/src/models/product_model.dart';
+import 'package:crud_flutter/src/providers/products_provider.dart';
 
 class ProductPage extends StatefulWidget {
   static final routeName = 'product';
@@ -11,7 +11,8 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
-  Product _product = new Product();
+  final productProvider = new ProducstProvider();
+  Product product = new Product();
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +52,12 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _inputName() {
     return TextFormField(
-      initialValue: _product.title,
+      initialValue: product.title,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: 'Producto',
       ),
-      onSaved: (value) => _product.title = value,
+      onSaved: (value) => product.title = value,
       validator: (value) {
         return value.length >= 3 ? null : 'Ingrese el nombre del producto';
       },
@@ -65,12 +66,12 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _inputPrice() {
     return TextFormField(
-      initialValue: _product.price.toString(),
+      initialValue: product.price.toString(),
       keyboardType: TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(
         labelText: 'Precio',
       ),
-      onSaved: (value) => _product.price = double.parse(value),
+      onSaved: (value) => product.price = double.parse(value),
       validator: (value) {
         return utils.isNumeric(value) ? null : 'Sólo se permiten números';
       },
@@ -79,11 +80,11 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _inputAvailable() {
     return SwitchListTile(
-      value: _product.available,
+      value: product.available,
       title: Text('Disponible'),
       activeColor: Colors.deepPurple,
       onChanged: (value) => setState(() {
-        _product.available = value;
+        product.available = value;
       }),
     );
   }
@@ -105,10 +106,7 @@ class _ProductPageState extends State<ProductPage> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
 
-      print('Formulario válido');
-      print(_product.title);
-      print(_product.price);
-      print(_product.available);
+      productProvider.createProduct(product);
     }
   }
 }
