@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:crud_flutter/src/pages/product_page.dart';
 import 'package:crud_flutter/src/blocs/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,15 +12,16 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('HomePage'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text('Email: ${bloc.email}'),
-          Divider(),
-          Text('Password: ${bloc.password}'),
-        ],
-      ),
+      body: Container(),
+      floatingActionButton: _floatActionButton(context),
+    );
+  }
+
+  Widget _floatActionButton(BuildContext context) {
+    return FloatingActionButton(
+      child: Icon(Icons.add),
+      backgroundColor: Colors.deepPurple,
+      onPressed: () => Navigator.pushNamed(context, ProductPage.routeName),
     );
   }
 }
