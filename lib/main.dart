@@ -4,8 +4,15 @@ import 'package:crud_flutter/src/pages/home_page.dart';
 import 'package:crud_flutter/src/pages/login_page.dart';
 import 'package:crud_flutter/src/pages/register_page.dart';
 import 'package:crud_flutter/src/pages/product_page.dart';
+import 'package:crud_flutter/src/shared_preferences/user_preferences.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = new UserPreferences();
+  await prefs.initPrefs();
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

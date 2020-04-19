@@ -1,9 +1,10 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
+import 'package:crud_flutter/src/shared_preferences/user_preferences.dart';
 
 class UserProvider {
   final String _firebaseKey = '';
+  final _prefs = new UserPreferences();
 
   Future<Map<String, dynamic>> createUser(String email, String password) async {
     final url =
@@ -22,13 +23,14 @@ class UserProvider {
     print(decodedRes);
 
     if (decodedRes.containsKey('idToken')) {
+      _prefs.token = decodedRes['idToken'];
       return {'ok': true, 'token': decodedRes['idToken']};
     } else {
       return {'ok': false, 'message': decodedRes['error']['message']};
     }
   }
 
-  login(String email, String password) async {
+  Future<Map<String, dynamic>> login(String email, String password) async {
     final url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$_firebaseKey';
 
@@ -45,6 +47,7 @@ class UserProvider {
     print(decodedRes);
 
     if (decodedRes.containsKey('idToken')) {
+      _prefs.token = decodedRes['idToken'];
       return {'ok': true, 'token': decodedRes['idToken']};
     } else {
       return {'ok': false, 'message': decodedRes['error']['message']};

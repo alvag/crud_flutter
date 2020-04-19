@@ -3,6 +3,7 @@ import 'package:crud_flutter/src/pages/home_page.dart';
 import 'package:crud_flutter/src/pages/register_page.dart';
 import 'package:crud_flutter/src/providers/user_provider.dart';
 import 'package:crud_flutter/src/blocs/provider.dart';
+import 'package:crud_flutter/src/utils/utils.dart' as utils;
 
 class LoginPage extends StatelessWidget {
   static final routeName = 'login';
@@ -188,11 +189,12 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) {
-    print('Email: ${bloc.email}');
-    print('Password: ${bloc.password}');
-    userProvider.login(bloc.email, bloc.password);
-
-    Navigator.pushReplacementNamed(context, HomePage.routeName);
+  _login(LoginBloc bloc, BuildContext context) async {
+    final res = await userProvider.login(bloc.email, bloc.password);
+    if (res['ok']) {
+      Navigator.pushReplacementNamed(context, HomePage.routeName);
+    } else {
+      utils.showAlert(context, 'Usuario o contraseña incorrecto');
+    }
   }
 }
