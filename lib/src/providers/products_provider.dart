@@ -10,11 +10,30 @@ class ProducstProvider {
   Future<bool> createProduct(Product product) async {
     final url = '$_url/products.json';
 
-    final resp = await http.post(url, body: productModelToJson(product));
-    final decodedData = json.decode(resp.body);
+    final res = await http.post(url, body: productModelToJson(product));
+    final decodedData = json.decode(res.body);
 
     print(decodedData);
 
     return true;
+  }
+
+  Future<List<Product>> getAll() async {
+    final url = '$_url/products.json';
+
+    final res = await http.get(url);
+    final Map<String, dynamic> decodedData = json.decode(res.body);
+
+    final List<Product> products = new List();
+
+    if (decodedData == null) return [];
+
+    decodedData.forEach((id, prod) {
+      final p = Product.fromJson(prod);
+      p.id = id;
+      products.add(p);
+    });
+
+    return products;
   }
 }
