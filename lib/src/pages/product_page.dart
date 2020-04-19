@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:crud_flutter/src/utils/utils.dart' as utils;
 import 'package:crud_flutter/src/providers/products_provider.dart';
 
@@ -11,8 +14,11 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   final productProvider = new ProducstProvider();
   Product product = new Product();
+  bool _isLoading = false;
+  File photo;
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +29,17 @@ class _ProductPageState extends State<ProductPage> {
     }
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Producto'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.photo_size_select_actual),
-            onPressed: () {},
+            onPressed: () => _selectImage(ImageSource.gallery),
           ),
           IconButton(
             icon: Icon(Icons.camera_alt),
-            onPressed: () {},
+            onPressed: () => _selectImage(ImageSource.camera),
           ),
         ],
       ),
@@ -43,6 +50,7 @@ class _ProductPageState extends State<ProductPage> {
             key: formKey,
             child: Column(
               children: <Widget>[
+                _showPhoto(),
                 _inputName(),
                 _inputPrice(),
                 _inputAvailable(),
@@ -104,7 +112,7 @@ class _ProductPageState extends State<ProductPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      onPressed: _submit,
+      onPressed: _isLoading ? null : _submit,
     );
   }
 
@@ -112,11 +120,52 @@ class _ProductPageState extends State<ProductPage> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
 
+      setState(() {
+        _isLoading = true;
+      });
+
       if (product.id == null) {
         productProvider.createProduct(product);
       } else {
         productProvider.updateProduct(product);
       }
+
+      showSnackbar('Producto guardado');
+
+      Navigator.pop(context);
     }
+  }
+
+  showSnackbar(String msg) {
+    final snackbar = SnackBar(
+      content: Text(msg),
+      duration: Duration(milliseconds: 1500),
+    );
+
+    scaffoldKey.currentState.showSnackBar(snackbar);
+  }
+
+  Widget _showPhoto() {
+    if (product.photo != null) {
+      return Container();
+    } else {
+      return Image(
+        image: photo?.path != null
+            ? FileImage(photo)
+            : AssetImage('assets/images/no-image.png'),
+        height: 300.0,
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  void _selectImage(ImageSource source) async {
+    photo = await ImagePicker.pickImage(
+      source: source,
+    );
+
+    if (photo != null) {}
+
+    setState(() {});
   }
 }
