@@ -1,3 +1,4 @@
+import 'package:crud_flutter/src/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/blocs/provider.dart';
 
@@ -106,7 +107,7 @@ class LoginPage extends StatelessWidget {
                 SizedBox(height: 30.0),
                 _inputPassword(bloc),
                 SizedBox(height: 30.0),
-                _loginButton(),
+                _loginButton(bloc, context),
               ],
             ),
           ),
@@ -160,19 +161,31 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginButton() {
-    return RaisedButton(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-        child: Text('Ingresar'),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      // elevation: 0.0,
-      color: Colors.deepPurple,
-      textColor: Colors.white,
-      onPressed: () {},
+  Widget _loginButton(LoginBloc bloc, BuildContext context) {
+    return StreamBuilder(
+      stream: bloc.formValidStream,
+      initialData: null,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return RaisedButton(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
+            child: Text('Ingresar'),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          // elevation: 0.0,
+          color: Colors.deepPurple,
+          textColor: Colors.white,
+          onPressed: snapshot.hasData ? () => _login(bloc, context) : null,
+        );
+      },
     );
+  }
+
+  _login(LoginBloc bloc, BuildContext context) {
+    print('Email: ${bloc.email}');
+    print('Password: ${bloc.password}');
+    Navigator.pushReplacementNamed(context, HomePage.routeName);
   }
 }
