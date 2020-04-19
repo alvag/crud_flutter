@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/pages/home_page.dart';
 import 'package:crud_flutter/src/pages/login_page.dart';
-import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/blocs/provider.dart';
+import 'package:crud_flutter/src/providers/user_provider.dart';
 
 class RegisterPage extends StatelessWidget {
   static final routeName = 'register';
+  final userProvider = new UserProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +110,7 @@ class RegisterPage extends StatelessWidget {
                 SizedBox(height: 30.0),
                 _inputPassword(bloc),
                 SizedBox(height: 30.0),
-                _loginButton(bloc, context),
+                _registerButton(bloc, context),
               ],
             ),
           ),
@@ -135,7 +137,6 @@ class RegisterPage extends StatelessWidget {
               icon: Icon(Icons.alternate_email, color: Colors.deepPurple),
               hintText: 'ejemplo@correo.com',
               labelText: 'Correo electrónico',
-              counterText: snapshot.data,
               errorText: snapshot.hasError ? snapshot.error : null,
             ),
             onChanged: bloc.changeEmail,
@@ -156,7 +157,6 @@ class RegisterPage extends StatelessWidget {
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline, color: Colors.deepPurple),
               labelText: 'Contraseña',
-              counterText: snapshot.data,
               errorText: snapshot.hasError ? snapshot.error : null,
             ),
             onChanged: bloc.changePassword,
@@ -166,7 +166,7 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  Widget _loginButton(LoginBloc bloc, BuildContext context) {
+  Widget _registerButton(LoginBloc bloc, BuildContext context) {
     return StreamBuilder(
       stream: bloc.formValidStream,
       initialData: null,
@@ -174,7 +174,7 @@ class RegisterPage extends StatelessWidget {
         return RaisedButton(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-            child: Text('Ingresar'),
+            child: Text('Registrar'),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
@@ -182,15 +182,16 @@ class RegisterPage extends StatelessWidget {
           // elevation: 0.0,
           color: Colors.deepPurple,
           textColor: Colors.white,
-          onPressed: snapshot.hasData ? () => _login(bloc, context) : null,
+          onPressed: snapshot.hasData ? () => _register(bloc, context) : null,
         );
       },
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) {
+  _register(LoginBloc bloc, BuildContext context) {
     print('Email: ${bloc.email}');
     print('Password: ${bloc.password}');
-    Navigator.pushReplacementNamed(context, HomePage.routeName);
+    userProvider.createUser(bloc.email, bloc.password);
+    // Navigator.pushReplacementNamed(context, HomePage.routeName);
   }
 }

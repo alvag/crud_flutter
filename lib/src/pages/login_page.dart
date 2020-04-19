@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/pages/home_page.dart';
 import 'package:crud_flutter/src/pages/register_page.dart';
+import 'package:crud_flutter/src/providers/user_provider.dart';
 import 'package:crud_flutter/src/blocs/provider.dart';
 
 class LoginPage extends StatelessWidget {
   static final routeName = 'login';
+  final userProvider = new UserProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +137,6 @@ class LoginPage extends StatelessWidget {
               icon: Icon(Icons.alternate_email, color: Colors.deepPurple),
               hintText: 'ejemplo@correo.com',
               labelText: 'Correo electrónico',
-              counterText: snapshot.data,
               errorText: snapshot.hasError ? snapshot.error : null,
             ),
             onChanged: bloc.changeEmail,
@@ -156,7 +157,6 @@ class LoginPage extends StatelessWidget {
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline, color: Colors.deepPurple),
               labelText: 'Contraseña',
-              counterText: snapshot.data,
               errorText: snapshot.hasError ? snapshot.error : null,
             ),
             onChanged: bloc.changePassword,
@@ -191,6 +191,8 @@ class LoginPage extends StatelessWidget {
   _login(LoginBloc bloc, BuildContext context) {
     print('Email: ${bloc.email}');
     print('Password: ${bloc.password}');
+    userProvider.login(bloc.email, bloc.password);
+
     Navigator.pushReplacementNamed(context, HomePage.routeName);
   }
 }
