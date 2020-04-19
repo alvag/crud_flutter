@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
         onTap: () => Navigator.pushNamed(context, ProductPage.routeName),
       ),
       onDismissed: (direction) {
-        // TODO: borrar item
+        productsProvider.deleteProduct(product.id);
       },
     );
   }
