@@ -63,11 +63,26 @@ class HomePage extends StatelessWidget {
         ),
         color: Colors.red,
       ),
-      child: ListTile(
-        title: Text('${product.title} - ${product.price}'),
-        subtitle: Text(product.id),
-        onTap: () => Navigator.pushNamed(context, ProductPage.routeName,
-            arguments: product),
+      child: Card(
+        child: Column(
+          children: <Widget>[
+            (product.photo == null)
+                ? Image(image: AssetImage('assets/images/no-image.png'))
+                : FadeInImage(
+                    image: NetworkImage(product.photo),
+                    placeholder: AssetImage('assets/images/loading.gif'),
+                    height: 300.0,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+            ListTile(
+              title: Text('${product.title} - ${product.price}'),
+              subtitle: Text(product.id),
+              onTap: () => Navigator.pushNamed(context, ProductPage.routeName,
+                  arguments: product),
+            )
+          ],
+        ),
       ),
       onDismissed: (direction) {
         productsProvider.deleteProduct(product.id);
@@ -75,3 +90,12 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+/* 
+ListTile(
+        title: Text('${product.title} - ${product.price}'),
+        subtitle: Text(product.id),
+        onTap: () => Navigator.pushNamed(context, ProductPage.routeName,
+            arguments: product),
+      )
+ */

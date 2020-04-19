@@ -116,13 +116,17 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  _submit() {
+  _submit() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
 
       setState(() {
         _isLoading = true;
       });
+
+      if (photo != null) {
+        product.photo = await productProvider.uploadImage(photo);
+      }
 
       if (product.id == null) {
         productProvider.createProduct(product);
@@ -147,7 +151,13 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _showPhoto() {
     if (product.photo != null) {
-      return Container();
+      return FadeInImage(
+        image: NetworkImage(product.photo),
+        placeholder: AssetImage('assets/images/loading.gif'),
+        height: 300.0,
+        width: double.infinity,
+        fit: BoxFit.contain,
+      );
     } else {
       return Image(
         image: photo?.path != null
@@ -164,7 +174,9 @@ class _ProductPageState extends State<ProductPage> {
       source: source,
     );
 
-    if (photo != null) {}
+    if (photo != null) {
+      product.photo = null;
+    }
 
     setState(() {});
   }
