@@ -15,13 +15,17 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  static final prefs = new UserPreferences();
+  final initialRoute =
+      prefs.token == null ? LoginPage.routeName : HomePage.routeName;
+
   @override
   Widget build(BuildContext context) {
     return Provider(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: LoginPage.routeName,
+        initialRoute: initialRoute,
         routes: {
           LoginPage.routeName: (context) => LoginPage(),
           HomePage.routeName: (context) => HomePage(),

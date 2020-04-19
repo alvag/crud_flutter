@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:crud_flutter/src/shared_preferences/user_preferences.dart';
+import 'package:crud_flutter/src/constants/constants.dart' as Constants;
 
 class UserProvider {
-  final String _firebaseKey = '';
+  final String _firebaseKey = Constants.FIREBASE_KEY;
   final _prefs = new UserPreferences();
 
   Future<Map<String, dynamic>> createUser(String email, String password) async {

@@ -17,7 +17,7 @@ class UserPreferences {
   }
 
   get token {
-    return _prefs.getString('token') ?? '';
+    return _prefs.getString('token') ?? null;
   }
 
   set token(String value) {

@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:crud_flutter/src/blocs/provider.dart';
+import 'package:crud_flutter/src/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:crud_flutter/src/utils/utils.dart' as utils;
-import 'package:crud_flutter/src/providers/products_provider.dart';
 
 class ProductPage extends StatefulWidget {
   static final routeName = 'product';
@@ -15,13 +16,14 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final productProvider = new ProducstProvider();
+  ProductsBloc productsBloc;
   Product product = new Product();
   bool _isLoading = false;
   File photo;
 
   @override
   Widget build(BuildContext context) {
+    productsBloc = Provider.productsBloc(context);
     final Product productData = ModalRoute.of(context).settings.arguments;
 
     if (productData != null) {
@@ -125,13 +127,13 @@ class _ProductPageState extends State<ProductPage> {
       });
 
       if (photo != null) {
-        product.photo = await productProvider.uploadImage(photo);
+        product.photo = await productsBloc.uploadImage(photo);
       }
 
       if (product.id == null) {
-        productProvider.createProduct(product);
+        productsBloc.createProduct(product);
       } else {
-        productProvider.updateProduct(product);
+        productsBloc.updateProduct(product);
       }
 
       showSnackbar('Producto guardado');

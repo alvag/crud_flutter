@@ -43,6 +43,7 @@ class ProducstProvider {
     final List<Product> products = new List();
 
     if (decodedData == null) return [];
+    if (decodedData['error'] != null) return [];
 
     decodedData.forEach((id, prod) {
       final p = Product.fromJson(prod);
