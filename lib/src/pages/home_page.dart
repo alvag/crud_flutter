@@ -90,12 +90,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-/* 
-ListTile(
-        title: Text('${product.title} - ${product.price}'),
-        subtitle: Text(product.id),
-        onTap: () => Navigator.pushNamed(context, ProductPage.routeName,
-            arguments: product),
-      )
- */
