@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/pages/home_page.dart';
-import 'package:crud_flutter/src/pages/register_page.dart';
+import 'package:crud_flutter/src/pages/login_page.dart';
+import 'package:flutter/material.dart';
 import 'package:crud_flutter/src/blocs/provider.dart';
 
-class LoginPage extends StatelessWidget {
-  static final routeName = 'login';
+class RegisterPage extends StatelessWidget {
+  static final routeName = 'register';
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,7 @@ class LoginPage extends StatelessWidget {
             ),
             child: Column(
               children: <Widget>[
-                Text('Ingreso', style: TextStyle(fontSize: 20.0)),
+                Text('Crear cuenta', style: TextStyle(fontSize: 20.0)),
                 SizedBox(height: 40.0),
                 _inputEmail(bloc),
                 SizedBox(height: 30.0),
@@ -113,9 +113,9 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           FlatButton(
-            child: Text('Crear cuenta'),
+            child: Text('Ir al login'),
             onPressed: () =>
-                Navigator.pushReplacementNamed(context, RegisterPage.routeName),
+                Navigator.pushReplacementNamed(context, LoginPage.routeName),
           ),
           SizedBox(height: 20.0),
         ],
